@@ -1,0 +1,42 @@
+Sub send_email()
+    Dim olApp As Object
+    Dim olMailItm As Object
+    Dim iCounter As Integer
+    Dim Dest As Variant
+    Dim SDest As String
+    Dim strTO As String
+    Dim strBCC As String
+    Dim strSubject As String
+    Dim strBody As String
+    
+    ' Создаем новый объект Outlook
+    Set olApp = CreateObject("Outlook.Application")
+    
+    ' Цикл по строкам в столбце A (до 20 строк)
+    For iCounter = 2 To 20
+        ' Получаем адреса из Excel
+        strTO = Cells(iCounter, 1).Value
+        If strTO <> "" Then ' Проверяем, что ячейка не пустая
+            strBCC = strTO ' Скрытая копия
+            
+            ' Формируем тело письма
+            strSubject = "Тема вашего письма"
+            strBody = "Здравствуйте!" & vbCrLf & "Это ваше сообщение."
+            
+            ' Создаем новый элемент (письмо) в Outlook
+            Set olMailItm = olApp.CreateItem(0)
+            With olMailItm
+                .BCC = strBCC
+                .Subject = strSubject
+                .Body = strBody
+                ' Указываем отправку от определенного ящика (группы рассылки)
+                .SentOnBehalfOfName = "1111@1111.com"
+                .Send
+            End With
+        End If
+    Next iCounter
+    
+    ' Освобождаем ресурсы
+    Set olMailItm = Nothing
+    Set olApp = Nothing
+End Sub
